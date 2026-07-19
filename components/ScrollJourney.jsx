@@ -56,6 +56,11 @@ function JourneyScene({ progress, reduce }) {
   const scatter = useRef([]);
   const cam = useRef();
   const soil = useRef();
+  const backdrop = useRef();
+  const stageColors = useMemo(() => ({
+    a: new THREE.Color("#A9C79A"), b: new THREE.Color("#E6DFC8"),
+    c: new THREE.Color("#D8C29A"), d: new THREE.Color("#8A7458"), tmp: new THREE.Color(),
+  }), []);
 
   const scatterData = useMemo(
     () => Array.from({ length: 14 }, (_, i) => ({
@@ -126,6 +131,18 @@ function JourneyScene({ progress, reduce }) {
       straw.current.position.set(1.62, 0.05 - (1 - s3) * 0.8 - s4 * 1.4, 0.32);
     }
 
+    // fon dairesi: sahneye gore renk degistirir
+    if (backdrop.current) {
+      const { a, b, c, d, tmp } = stageColors;
+      tmp.copy(a);
+      if (s2 > 0) tmp.lerp(b, s2);
+      if (s3 > 0) tmp.lerp(c, s3);
+      if (s4 > 0) tmp.lerp(d, s4);
+      backdrop.current.material.color.copy(tmp);
+      backdrop.current.scale.setScalar(2.1 + s3 * 0.5 - s4 * 0.4);
+      backdrop.current.position.y = 0.2 - s4 * 0.8;
+    }
+
     // toprak diski
     if (soil.current) {
       soil.current.material.opacity = s4 * 0.9;
@@ -153,17 +170,22 @@ function JourneyScene({ progress, reduce }) {
       <directionalLight position={[4, 6, 4]} intensity={1.1} color="#FFF8E8" />
       <directionalLight position={[-5, 3, -3]} intensity={0.35} color="#DFF0D0" />
 
+      <mesh ref={backdrop} position={[0, 0.2, -3]}>
+        <circleGeometry args={[1, 72]} />
+        <meshStandardMaterial color="#A9C79A" roughness={1} transparent opacity={0.55} />
+      </mesh>
+
       <mesh ref={heroLeaf} geometry={geo.leaf}>
         <meshStandardMaterial color={LEAF} roughness={0.8} side={THREE.DoubleSide} />
       </mesh>
       <mesh ref={bowl} geometry={geo.bowl}>
-        <meshStandardMaterial color={FIBER} roughness={0.92} />
+        <meshStandardMaterial color={FIBER} roughness={0.92} side={THREE.DoubleSide} />
       </mesh>
       <mesh ref={plate} geometry={geo.plate}>
-        <meshStandardMaterial color={FIBER} roughness={0.92} />
+        <meshStandardMaterial color={FIBER} roughness={0.92} side={THREE.DoubleSide} />
       </mesh>
       <mesh ref={cup} geometry={geo.cup}>
-        <meshStandardMaterial color={BONE} roughness={0.85} />
+        <meshStandardMaterial color={BONE} roughness={0.85} side={THREE.DoubleSide} />
       </mesh>
       <mesh ref={straw}>
         <cylinderGeometry args={[0.045, 0.045, 1.6, 16]} />
@@ -183,10 +205,10 @@ function JourneyScene({ progress, reduce }) {
 }
 
 const CAPTIONS = [
-  { n: "01", t: "Bitkiden Gelir", d: "Mısır nişastası, şeker kamışı ve palmiye yaprağı — hammaddemiz doğanın kendisi." },
-  { n: "02", t: "Doğal Üretim", d: "Elyaf, kimyasal katkı olmadan yüksek basınç ve ısıyla şekillenir." },
-  { n: "03", t: "Sofranıza Ulaşır", d: "Sağlam, sızdırmaz, premium sunum — plastik değildir, bitki bazlıdır." },
-  { n: "04", t: "Doğaya Döner", d: "Kullanım sonrası 180 günde komposta karışır. Geriye mikroplastik değil, toprak kalır." },
+  { n: "1", t: "Bitkiden Gelir", d: "Mısır nişastası, şeker kamışı ve palmiye yaprağı — hammaddemiz doğanın kendisi." },
+  { n: "2", t: "Doğal Üretim", d: "Elyaf, kimyasal katkı olmadan yüksek basınç ve ısıyla şekillenir." },
+  { n: "3", t: "Sofranıza Ulaşır", d: "Sağlam, sızdırmaz, premium sunum — plastik değildir, bitki bazlıdır." },
+  { n: "4", t: "Doğaya Döner", d: "Kullanım sonrası 180 günde komposta karışır. Geriye mikroplastik değil, toprak kalır." },
 ];
 
 export default function ScrollJourney() {
@@ -210,12 +232,21 @@ export default function ScrollJourney() {
         {/* basliklar */}
         <div className="pointer-events-none absolute inset-0 flex items-center">
           <div className="mx-auto w-full max-w-wrap px-6">
-            <div className="relative h-40 max-w-md">
+            <div className="relative h-56 max-w-md">
               {CAPTIONS.map((c, i) => (
                 <motion.div key={c.n} style={reduce ? (i === 2 ? {} : { opacity: 0 }) : { opacity: opacities[i], y: ys[i] }} className="absolute inset-0">
-                  <span className="mb-2 block font-display text-sm italic text-leaf">{c.n} / 04</span>
-                  <h3 className="mb-3 font-display text-h2 font-medium text-green">{c.t}</h3>
-                  <p className="text-[#4a5342]">{c.d}</p>
+                  <div className="rounded-[24px] border border-line bg-cream/90 p-7 shadow-[0_18px_40px_rgba(31,59,19,.10)] backdrop-blur-sm" style={{ borderRadius: "26px 30px 24px 32px" }}>
+                    <div className="mb-3 flex items-center gap-3">
+                      <span className="flex h-9 w-9 items-center justify-center bg-green font-display text-sm italic text-ongreen" style={{ borderRadius: "12px 15px 11px 16px" }}>{c.n}</span>
+                      <span className="flex gap-1.5" aria-hidden="true">
+                        {CAPTIONS.map((_, j) => (
+                          <span key={j} className={`h-1.5 rounded-full transition-all ${j === i ? "w-6 bg-leaf" : "w-1.5 bg-line"}`} />
+                        ))}
+                      </span>
+                    </div>
+                    <h3 className="mb-2 font-display text-[1.7rem] font-medium leading-tight text-green">{c.t}</h3>
+                    <p className="text-sm leading-relaxed text-[#4a5342]">{c.d}</p>
+                  </div>
                 </motion.div>
               ))}
             </div>
