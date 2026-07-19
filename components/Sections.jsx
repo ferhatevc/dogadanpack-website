@@ -4,6 +4,8 @@ import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } fr
 import AnimatedTextCycle from "./ui/AnimatedTextCycle.jsx";
 import InteractiveHoverButton from "./ui/InteractiveHoverButton.jsx";
 import CountUp from "./ui/CountUp.jsx";
+import { TiltCard, ClientOnly } from "./ui/Tilt.jsx";
+import Hero3D from "./ui/Hero3D.jsx";
 
 /* ---------- Logo: O icinde catal-kasik-bicak ---------- */
 export function LogoO({ size = 42 }) {
@@ -190,7 +192,31 @@ export function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* logo sahnesi */}
+        {/* 3D urun sahnesi */}
+        <motion.div
+          className="relative flex h-[380px] justify-center md:h-[460px]"
+          initial={reduce ? false : { opacity: 0, scale: 0.94 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="absolute inset-0 overflow-hidden rounded-[36px] border border-line bg-cream shadow-[0_24px_60px_rgba(31,59,19,.10)]">
+            <ClientOnly
+              fallback={<div className="flex h-full items-center justify-center"><LogoO size={96} /></div>}
+            >
+              <Hero3D reduce={reduce} />
+            </ClientOnly>
+          </div>
+          {/* kose rozeti */}
+          <div className="absolute -bottom-4 left-6 flex items-center gap-2.5 rounded-full border border-line bg-cream px-4 py-2 shadow-cta">
+            <LogoO size={28} />
+            <span className="font-display text-sm italic text-green-soft">"Yeşil Bir Gelecek İçin"</span>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+/* eski logo sahnesi kaldirildi:
         <motion.div
           className="flex justify-center"
           initial={reduce ? false : { opacity: 0, scale: 0.92, y: 20 }}
@@ -233,10 +259,7 @@ export function Hero() {
             </svg>
           </motion.div>
         </motion.div>
-      </div>
-    </section>
-  );
-}
+*/
 
 /* ================= BOLUM 2: OZELLIKLER ================= */
 const viewport = { once: true, amount: 0.25 };
@@ -650,5 +673,74 @@ export function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+/* ================= URUNLER (Farin katalog yapisi + 3D tilt) ================= */
+const PRODUCTS = [
+  { t: "Kaseler", d: "Şeker kamışı bagasse çorba ve salata kaseleri.", s: "6 çeşit",
+    i: <><path d="M3 10h18c0 5-3.5 9-9 9s-9-4-9-9Z"/><path d="M7 6c1-1.5 3-1.5 4 0s3 1.5 4 0"/></> },
+  { t: "Kovalar", d: "Büyük hacimli servis ve paket kovaları.", s: "4 çeşit",
+    i: <><path d="M5 8h14l-1.5 12h-11L5 8Z"/><path d="M7 8a5 5 0 0 1 10 0"/></> },
+  { t: "Tabaklar", d: "Yuvarlak, kare ve kayık tabaklar.", s: "Yuvarlak · Kare · Kayık",
+    i: <><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/></> },
+  { t: "Kaplar", d: "Düz ve kapaklı sızdırmaz gıda kapları.", s: "Düz · Kapaklı",
+    i: <><rect x="4" y="9" width="16" height="10" rx="2"/><path d="M3 9h18M8 6h8"/></> },
+  { t: "Tabldotlar", d: "Bölmeli menü tabakları — toplu yemek için.", s: "3 · 4 · 5 bölmeli",
+    i: <><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 12h18M12 12v7M12 5v7"/></> },
+  { t: "Bardaklar", d: "Düz ve fit bardaklar, PLA kaplamalı.", s: "Düz · Fit",
+    i: <><path d="M7 4h10l-1.2 16H8.2L7 4Z"/><path d="M7.5 9h9"/></> },
+  { t: "Fincanlar", d: "Doğal elyaf dokulu çay-kahve fincanları.", s: "2 çeşit",
+    i: <><path d="M4 8h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V8Z"/><path d="M16 9h2a3 3 0 0 1 0 6h-2"/></> },
+  { t: "Servis Setleri", d: "Mısır nişastası çatal-kaşık-bıçak setleri.", s: "Tekli · Set",
+    i: <><path d="M7 3v7M5 3v4M9 3v4M7 10v11"/><path d="M15 3c2 2 2.6 6 2 9h-2.5c-.6-3 0-7 .5-9ZM16 12v9"/></> },
+  { t: "Kağıt Pipetler", d: "%100 ekolojik, özel baskı imkânlı.", s: "197 mm · özel baskı",
+    i: <path d="M9 21 17 4M15.5 3l3 1.5-1 2.2-3.2-1.4z"/> },
+  { t: "Aksesuarlar", d: "Peçete, karıştırıcı ve sunum ürünleri.", s: "Tümünü gör",
+    i: <><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.8 2.8M16.2 16.2 19 19M19 5l-2.8 2.8M7.8 16.2 5 19"/></> },
+];
+
+export function Products() {
+  return (
+    <section id="urunler" className="px-6 py-24">
+      <div className="mx-auto max-w-wrap">
+        <motion.div className="mb-12 max-w-2xl" variants={staggerV} initial="hidden" whileInView="show" viewport={viewport}>
+          <motion.span variants={fadeUp} className="mb-3.5 inline-block text-xs font-bold uppercase tracking-[0.14em] text-leaf">
+            Ürün Kataloğumuz
+          </motion.span>
+          <motion.h2 variants={fadeUp} className="mb-3.5 font-display text-h2 font-medium text-green">
+            Sofranız için doğadan gelen her şey
+          </motion.h2>
+          <motion.p variants={fadeUp} className="text-[#4a5342]">
+            Kaselerden servis setlerine, tabldotlardan pipetlere — catering ve gıda servisi için eksiksiz ürün gamı.
+          </motion.p>
+        </motion.div>
+
+        <motion.div
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          variants={staggerV}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.08 }}
+        >
+          {PRODUCTS.map((p) => (
+            <motion.div key={p.t} variants={fadeUp}>
+              <TiltCard className="group h-full cursor-pointer rounded-card border border-line bg-cream p-7 transition-colors hover:border-moss">
+                <div style={{ transform: "translateZ(30px)" }}>
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-organic bg-fiber transition-colors group-hover:bg-moss/25">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F3B13" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      {p.i}
+                    </svg>
+                  </div>
+                  <h3 className="mb-1.5 text-base font-semibold text-green">{p.t}</h3>
+                  <p className="mb-2.5 text-sm text-[#5a6350]">{p.d}</p>
+                  <span className="text-xs font-semibold text-leaf">{p.s} →</span>
+                </div>
+              </TiltCard>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
   );
 }
