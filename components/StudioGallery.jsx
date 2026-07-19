@@ -4,19 +4,18 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 /**
  * "Stüdyodan" — Higgsfield sinematik ürün çekimleri galerisi.
- * Asimetrik grid + tıklamayla lightbox. Görseller şimdilik Higgsfield CDN'inden;
- * canlıya çıkmadan önce public/studio/ altına indirilmeli (bkz. README).
+ * Asimetrik grid + tıklamayla lightbox. Görseller kalıcı: public/studio/ altında (webp).
  */
 
-const CDN = "https://d8j0ntlcm91z4.cloudfront.net/user_3EGFPhR8FNajJSJ8hPymRN2Qe4U";
-
 const SHOTS = [
-  { src: `${CDN}/hf_20260715_085202_d1428113-9acd-42c0-aa0d-283c2739e41a.png`, alt: "DoğadanPack kraft çanta ve tabldot seti — stüdyo çekimi", big: true },
-  { src: `${CDN}/hf_20260715_085202_34a2f398-d1db-43aa-9f20-08981a83cf2c.png`, alt: "Havada süzülen bagasse kaplar ve yaprak" },
-  { src: `${CDN}/hf_20260715_085011_dd10c0b1-2252-488d-95fe-b066f9ea4a13.png`, alt: "DoğadanPack kabartmalı kapak — makro detay" },
-  { src: `${CDN}/hf_20260714_223322_7d931ce8-7838-4cc3-bc26-5297bbf618fe.png`, alt: "Catering sofrasında DoğadanPack sunumu", big: true },
-  { src: `${CDN}/hf_20260714_165156_a038a7e4-d023-4310-9a9b-54ee4ccabd4f.png`, alt: "Kraft çantada ürünler ve servis seti" },
-  { src: `${CDN}/hf_20260714_164651_135c7ad1-5606-45bb-9d89-a9d6f52e38b2.png`, alt: "Elde bagasse kase — sıcak servis" },
+  { src: "/studio/studio-01-set-yesil-daire.webp", alt: "DoğadanPack tam servis seti — kraft çanta, tabldot, kase, tabak ve ahşap çatal, yeşil daire fonda", span: "big" },
+  { src: "/studio/studio-02-kase-kulesi.webp", alt: "Kapaklı bagasse kaseler üst üste, yanında bölmeli tabldotlar" },
+  { src: "/studio/studio-03-sicak-kase.webp", alt: "Dumanı tüten bulgur kasesi — elde DoğadanPack bagasse kase" },
+  { src: "/studio/studio-04-logo-makro.webp", alt: "DOĞADANPACK kabartma logo — bagasse kapak makro detay" },
+  { src: "/studio/studio-05-suzulen-urunler.webp", alt: "Havada süzülen kase, tabak ve tabldot — doğal elyaf ve yaprak" },
+  { src: "/studio/studio-06-urun-dizilimi.webp", alt: "Mermer bloklarda ürün dizilimi — kapaklar, çanta, kase ve servis seti", span: "tall" },
+  { src: "/studio/studio-07-paket-servis.webp", alt: "Kraft DoğadanPack çantasına paket servis hazırlanıyor", span: "tall" },
+  { src: "/studio/studio-08-catering-sofrasi.webp", alt: "Catering sofrasında DoğadanPack tabak ve tabldotlarla sunum", span: "big" },
 ];
 
 const fadeUp = {
@@ -55,7 +54,7 @@ export default function StudioGallery() {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6"
+          className="grid grid-cols-2 gap-4 [grid-auto-flow:dense] md:grid-cols-4 md:gap-6"
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
           initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }}
         >
@@ -66,7 +65,7 @@ export default function StudioGallery() {
               onClick={() => setOpen(i)}
               whileHover={reduce ? {} : { y: -6 }}
               transition={{ type: "spring", stiffness: 320, damping: 24 }}
-              className={`group relative cursor-pointer overflow-hidden rounded-card border border-line bg-fiber focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-leaf ${s.big ? "col-span-2 row-span-2" : ""}`}
+              className={`group relative cursor-pointer overflow-hidden rounded-card border border-line bg-fiber focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-leaf ${s.span === "big" ? "col-span-2 row-span-2" : s.span === "tall" ? "row-span-2" : ""}`}
               aria-label={`${s.alt} — büyüt`}
             >
               <img
@@ -74,7 +73,7 @@ export default function StudioGallery() {
                 alt={s.alt}
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                style={{ aspectRatio: "1/1" }}
+                style={s.span ? {} : { aspectRatio: "1/1" }}
               />
               <span className="pointer-events-none absolute inset-0 bg-green/0 transition-colors duration-300 group-hover:bg-green/10" />
             </motion.button>
