@@ -5,7 +5,6 @@ import AnimatedTextCycle from "./ui/AnimatedTextCycle.jsx";
 import InteractiveHoverButton from "./ui/InteractiveHoverButton.jsx";
 import CountUp from "./ui/CountUp.jsx";
 import { TiltCard, ClientOnly } from "./ui/Tilt.jsx";
-import Hero3D from "./ui/Hero3D.jsx";
 
 /* ---------- Logo: O icinde catal-kasik-bicak ---------- */
 export function LogoO({ size = 42 }) {
@@ -200,13 +199,36 @@ export function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="absolute inset-0 overflow-hidden rounded-[36px] border border-line bg-cream shadow-[0_24px_60px_rgba(31,59,19,.10)]">
-            <ClientOnly
-              fallback={<div className="flex h-full items-center justify-center"><LogoO size={96} /></div>}
-            >
-              <Hero3D reduce={reduce} />
-            </ClientOnly>
-          </div>
+          <motion.div
+            className="absolute inset-0 overflow-hidden rounded-[36px] border border-line bg-cream shadow-[0_24px_60px_rgba(31,59,19,.10)]"
+            whileHover={reduce ? {} : { scale: 1.015 }}
+            transition={{ type: "spring", stiffness: 200, damping: 26 }}
+          >
+            <motion.img
+              src="/studio/studio-01-set-yesil-daire.webp"
+              alt="DoğadanPack tam servis seti — kraft çanta, tabldot, kase ve ahşap çatal stüdyo çekimi"
+              className="h-full w-full object-cover"
+              animate={reduce ? {} : { scale: [1.04, 1.09, 1.04] }}
+              transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* suzulen yapraklar */}
+            {[
+              { left: "8%", top: "10%", size: 40, dur: 5.5, delay: 0 },
+              { left: "82%", top: "16%", size: 30, dur: 7, delay: 1.4 },
+              { left: "70%", top: "70%", size: 24, dur: 6, delay: 0.8 },
+            ].map((l, i) => (
+              <motion.svg
+                key={i} viewBox="0 0 52 34" width={l.size} height={l.size * 0.65}
+                className="absolute" style={{ left: l.left, top: l.top }}
+                animate={reduce ? {} : { y: [0, -14, 0], rotate: [0, 12, 0] }}
+                transition={{ duration: l.dur, repeat: Infinity, ease: "easeInOut", delay: l.delay }}
+                aria-hidden="true"
+              >
+                <path d="M0 22 C10 4 34 -2 52 1 C50 18 36 32 16 32 C10 32 4 28 0 22 Z" fill="#4C8A2E" />
+                <path d="M4 24 C18 16 34 9 48 4" stroke="#DFF0D0" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+              </motion.svg>
+            ))}
+          </motion.div>
           {/* kose rozeti */}
           <div className="absolute -bottom-4 left-6 flex items-center gap-2.5 rounded-full border border-line bg-cream px-4 py-2 shadow-cta">
             <LogoO size={28} />
