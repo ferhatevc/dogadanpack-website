@@ -29,3 +29,6 @@ Kurallar: Pantone 5535 C (#1F3B13) marka paleti, Fraunces + Montserrat tipografi
 - [ ] Referans metinlerini ("Örnek Catering" vb.) gerçek müşteri alıntılarıyla değiştir
 - [ ] WhatsApp ve E-Katalog linklerini gerçek adreslerle doldur
 - [ ] Ürün kartlarındaki çeşit sayılarını doğrula
+- [ ] Stüdyo galerisindeki görselleri Higgsfield'dan indirip `public/studio/` klasörüne koy ve
+      `components/StudioGallery.jsx` içindeki `CDN` yollarını `/studio/...` ile değiştir
+      (CDN linklerinin kalıcılığı garanti değildir)

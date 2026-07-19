@@ -33,6 +33,7 @@ export function LogoO({ size = 42 }) {
 
 const NAV = [
   ["#urunler", "Ürünlerimiz"],
+  ["#studyo", "Stüdyodan"],
   ["#neden", "Neden Doğadan?"],
   ["#referanslar", "Referanslar"],
   ["#fiyat", "Fiyatlandırma"],
