@@ -4,6 +4,7 @@ import "../app/globals.css";
 import { Navbar, Hero, Products, Features, SocialProof, Pricing, Faq, Cta, Footer } from "../components/Sections.jsx";
 import ScrollJourney from "../components/ScrollJourney.jsx";
 import StudioGallery from "../components/StudioGallery.jsx";
+import Catalog from "../components/Catalog.jsx";
 
 createRoot(document.getElementById("root")).render(
   <main>
@@ -12,6 +13,7 @@ createRoot(document.getElementById("root")).render(
     <ScrollJourney />
     <Products />
     <StudioGallery />
+    <Catalog />
     <Features />
     <SocialProof />
     <Pricing />

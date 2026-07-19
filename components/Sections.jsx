@@ -33,6 +33,7 @@ export function LogoO({ size = 42 }) {
 const NAV = [
   ["#urunler", "Ürünlerimiz"],
   ["#studyo", "Stüdyodan"],
+  ["#katalog", "E-Katalog"],
   ["#neden", "Neden Doğadan?"],
   ["#referanslar", "Referanslar"],
   ["#fiyat", "Fiyatlandırma"],
@@ -644,7 +645,7 @@ export function Cta() {
         </motion.p>
         <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-4">
           <InteractiveHoverButton href="mailto:info@dogadanpack.com" variant="primary">Teklif İste</InteractiveHoverButton>
-          <InteractiveHoverButton href="#" variant="ghost">E-Katalog (PDF)</InteractiveHoverButton>
+          <InteractiveHoverButton href="#katalog" variant="ghost">E-Kataloğu Aç</InteractiveHoverButton>
         </motion.div>
       </motion.div>
     </section>
