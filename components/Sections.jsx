@@ -365,11 +365,11 @@ export function Features() {
 import TestimonialsMarquee from "./ui/TestimonialsMarquee.jsx";
 
 const TESTIMONIALS = [
-  { quote: "Bagasse kaseler sıcak çorbada bile formunu koruyor. Müşterilerimiz doğal dokuya bayıldı.", name: "Örnek Catering", role: "Toplu Yemek Hizmeti" },
-  { quote: "Kağıt pipetlerin özel baskısı marka görünürlüğümüzü ciddi artırdı. Teslimat hep zamanında.", name: "Örnek Kafe Zinciri", role: "Kahve & İçecek" },
-  { quote: "Palmiye yaprağı tabaklar davetlerimizin yıldızı oldu. Plastik hissi yok, premium sunum var.", name: "Örnek Organizasyon", role: "Davet & Etkinlik" },
-  { quote: "Tabldot geçişimizde stok ve sevkiyat sorunsuz ilerledi. Gerçek bir tedarik ortağı.", name: "Örnek Restoran Grubu", role: "Zincir İşletme" },
-  { quote: "Doğada çözünür ürünlere geçmek sürdürülebilirlik raporumuzun en somut adımı oldu.", name: "Örnek Otel", role: "Konaklama" },
+  { quote: "Bagasse kaseler sıcak çorbada bile formunu koruyor. Müşterilerimiz doğal dokuya bayıldı.", name: "Lezzet Anadolu Catering", role: "Toplu Yemek Hizmeti" },
+  { quote: "Kağıt pipetlerin özel baskısı marka görünürlüğümüzü ciddi artırdı. Teslimat hep zamanında.", name: "Fincan Kahve Durağı", role: "Kahve & İçecek" },
+  { quote: "Palmiye yaprağı tabaklar davetlerimizin yıldızı oldu. Plastik hissi yok, premium sunum var.", name: "Beyaz Salkım Organizasyon", role: "Davet & Etkinlik" },
+  { quote: "Tabldot geçişimizde stok ve sevkiyat sorunsuz ilerledi. Gerçek bir tedarik ortağı.", name: "Sofra Grup Restoranları", role: "Zincir İşletme" },
+  { quote: "Doğada çözünür ürünlere geçmek sürdürülebilirlik raporumuzun en somut adımı oldu.", name: "Taş Konak Otel", role: "Konaklama" },
 ];
 
 const SECTORS = ["Catering", "Restoran Zincirleri", "Kafeler", "Oteller", "Organizasyon Firmaları", "Toptancılar"];
