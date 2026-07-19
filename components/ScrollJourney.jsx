@@ -15,8 +15,8 @@ const STAGES = [
   {
     n: "1", t: "Bitkiden Gelir",
     d: "Mısır nişastası, şeker kamışı ve palmiye yaprağı — hammaddemiz doğanın kendisi.",
-    img: "/studio/studio-05-suzulen-urunler.webp",
-    alt: "Havada süzülen bagasse kase, tabak ve tabldot, doğal elyaf ve yaprakla",
+    img: "/studio/studio-01-set-yesil-daire.webp",
+    alt: "DoğadanPack tam servis seti — kraft çanta, tabldot, kase ve ahşap çatal, yeşil daire fonda",
   },
   {
     n: "2", t: "Doğal Üretim",

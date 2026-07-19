@@ -205,8 +205,8 @@ export function Hero() {
             transition={{ type: "spring", stiffness: 200, damping: 26 }}
           >
             <motion.img
-              src="/studio/studio-01-set-yesil-daire.webp"
-              alt="DoğadanPack tam servis seti — kraft çanta, tabldot, kase ve ahşap çatal stüdyo çekimi"
+              src="/studio/studio-05-suzulen-urunler.webp"
+              alt="Havada süzülen DoğadanPack kase, tabak ve tabldot — doğal elyaf ve yaprakla"
               className="h-full w-full object-cover"
               animate={reduce ? {} : { scale: [1.04, 1.09, 1.04] }}
               transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
