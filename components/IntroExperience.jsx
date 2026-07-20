@@ -82,7 +82,6 @@ export default function IntroExperience() {
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    if (reduce) { setReady(true); return; }
     let raf, renderer, disposed = false;
     const state = { morph: 0, morphT: 0, scroll: 0, mouse: new THREE.Vector2(0, 0), mouseT: new THREE.Vector2(0, 0) };
 
@@ -199,10 +198,10 @@ export default function IntroExperience() {
       cancelAnimationFrame(raf);
       renderer?.dispose();
     };
-  }, [reduce]);
+  }, []);
 
   // hareket azaltilmis veya hata: sik statik acilis (krem logo + slogan)
-  if (reduce || failed) {
+  if (failed) {
     return (
       <section className="relative flex h-screen flex-col items-center justify-center gap-8 overflow-hidden" style={{ background: "#152A0D" }}>
         <img
