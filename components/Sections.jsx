@@ -56,12 +56,8 @@ export function Navbar() {
       transition={{ duration: 0.55, ease: "easeOut" }}
     >
       <div className="mx-auto flex max-w-wrap items-center justify-between px-6 py-3.5">
-        <a href="#" className="flex items-center gap-3" aria-label="DoğadanPack ana sayfa">
-          <LogoO />
-          <span className="hidden flex-col leading-none sm:flex">
-            <span className="text-lg font-extrabold tracking-wide text-green">DOĞADAN</span>
-            <span className="text-lg font-extrabold tracking-[0.35em] text-green">PACK</span>
-          </span>
+        <a href="#" className="flex items-center" aria-label="DoğadanPack ana sayfa">
+          <img src="/logo.png" alt="DoğadanPack — Yeşil Bir Gelecek İçin" className="h-14 w-auto md:h-16" />
         </a>
         <nav className="hidden gap-8 text-sm font-semibold lg:flex" aria-label="Ana menü">
           {NAV.map(([href, label]) => (
@@ -131,6 +127,51 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09, delayChildren: 0.15 } } };
+
+
+/* hero: elimizdeki cekimlerle otomatik donen slayt */
+const HERO_SLIDES = [
+  { src: "/studio/studio-05-suzulen-urunler.webp", alt: "Havada süzülen DoğadanPack kase, tabak ve tabldot" },
+  { src: "/studio/studio-01-set-yesil-daire.webp", alt: "DoğadanPack tam servis seti — yeşil daire fonda" },
+  { src: "/studio/studio-03-sicak-kase.webp", alt: "Elde dumanı tüten DoğadanPack bagasse kase" },
+  { src: "/studio/studio-08-catering-sofrasi.webp", alt: "Catering sofrasında DoğadanPack sunumu" },
+];
+
+function HeroSlideshow({ reduce }) {
+  const [i, setI] = useState(0);
+  React.useEffect(() => {
+    if (reduce) return;
+    const t = setInterval(() => setI((v) => (v + 1) % HERO_SLIDES.length), 5000);
+    return () => clearInterval(t);
+  }, [reduce]);
+  return (
+    <div className="absolute inset-0">
+      <AnimatePresence initial={false}>
+        <motion.img
+          key={HERO_SLIDES[i].src}
+          src={HERO_SLIDES[i].src}
+          alt={HERO_SLIDES[i].alt}
+          className="absolute inset-0 h-full w-full object-cover"
+          initial={{ opacity: 0, scale: 1.06 }}
+          animate={{ opacity: 1, scale: reduce ? 1.02 : 1.1 }}
+          exit={{ opacity: 0 }}
+          transition={{ opacity: { duration: 1.1, ease: "easeInOut" }, scale: { duration: 5.5, ease: "linear" } }}
+        />
+      </AnimatePresence>
+      {/* slayt noktalari */}
+      <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+        {HERO_SLIDES.map((_, j) => (
+          <button
+            key={j}
+            onClick={() => setI(j)}
+            aria-label={`Görsel ${j + 1}`}
+            className={`h-2 rounded-full transition-all ${j === i ? "w-6 bg-cream" : "w-2 bg-cream/60"}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function Hero() {
   const reduce = useReducedMotion();
@@ -205,13 +246,7 @@ export function Hero() {
             whileHover={reduce ? {} : { scale: 1.015 }}
             transition={{ type: "spring", stiffness: 200, damping: 26 }}
           >
-            <motion.img
-              src="/studio/studio-05-suzulen-urunler.webp"
-              alt="Havada süzülen DoğadanPack kase, tabak ve tabldot — doğal elyaf ve yaprakla"
-              className="h-full w-full object-cover"
-              animate={reduce ? {} : { scale: [1.04, 1.09, 1.04] }}
-              transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-            />
+            <HeroSlideshow reduce={reduce} />
             {/* suzulen yapraklar */}
             {[
               { left: "8%", top: "10%", size: 40, dur: 5.5, delay: 0 },
