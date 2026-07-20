@@ -15,7 +15,7 @@ uniform float uTime;
 uniform float uMorph;      // 0: dagimik -> 1: logo
 uniform float uScroll;     // 0: sahnede -> 1: dagildi
 uniform vec2  uMouse;      // -1..1
-attribute vec3 aStart;
+uniform float uDpr;
 attribute vec3 aTarget;
 attribute vec4 aRand;      // x: hiz, y: faz, z: boyut, w: renk secimi
 varying float vAlpha;
@@ -26,7 +26,7 @@ void main() {
   // baslangic -> logo morfu (her parcacik kendi gecikmesiyle)
   float m = clamp(uMorph * 1.35 - aRand.y * 0.35, 0.0, 1.0);
   m = m * m * (3.0 - 2.0 * m); // smoothstep
-  vec3 pos = mix(aStart, aTarget, m);
+  vec3 pos = mix(position, aTarget, m);
 
   // ruzgar dalgasi (morf tamamlaninca sakinlesir)
   float wind = (1.0 - m) * 0.6 + 0.035;
@@ -49,7 +49,7 @@ void main() {
 
   vec4 mv = modelViewMatrix * vec4(pos, 1.0);
   gl_Position = projectionMatrix * mv;
-  gl_PointSize = (aRand.z * 5.5 + 2.5) * (1.0 / -mv.z) * 300.0;
+  gl_PointSize = (aRand.z * 4.0 + 2.0) * uDpr * (3.2 / -mv.z);
 
   vAlpha = (0.55 + 0.45 * sin(t * 1.5 + aRand.y * 20.0)) * (1.0 - s);
   vColorMix = aRand.w;
@@ -57,7 +57,6 @@ void main() {
 `;
 
 const FRAG = `
-precision mediump float;
 varying float vAlpha;
 varying float vColorMix;
 uniform vec3 uColA; // krem
@@ -80,6 +79,7 @@ export default function IntroExperience() {
   const canvasRef = useRef(null);
   const reduce = useReducedMotion();
   const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     if (reduce) { setReady(true); return; }
@@ -87,6 +87,7 @@ export default function IntroExperience() {
     const state = { morph: 0, morphT: 0, scroll: 0, mouse: new THREE.Vector2(0, 0), mouseT: new THREE.Vector2(0, 0) };
 
     (async () => {
+      try {
       const res = await fetch("/logo-points.json");
       const flat = await res.json();
       if (disposed) return;
@@ -106,7 +107,6 @@ export default function IntroExperience() {
 
       // geometri
       const geo = new THREE.BufferGeometry();
-      const positions = new Float32Array(count * 3);
       const starts = new Float32Array(count * 3);
       const targets = new Float32Array(count * 3);
       const rands = new Float32Array(count * 4);
@@ -126,8 +126,8 @@ export default function IntroExperience() {
         rands[i * 4 + 2] = Math.random();
         rands[i * 4 + 3] = Math.random();
       }
-      geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-      geo.setAttribute("aStart", new THREE.BufferAttribute(starts, 3));
+      geo.setAttribute("position", new THREE.BufferAttribute(starts, 3));
+      geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), 10);
       geo.setAttribute("aTarget", new THREE.BufferAttribute(targets, 3));
       geo.setAttribute("aRand", new THREE.BufferAttribute(rands, 4));
 
@@ -145,6 +145,7 @@ export default function IntroExperience() {
           uColA: { value: new THREE.Color("#F7F5EE") },
           uColB: { value: new THREE.Color("#7BC24E") },
           uColC: { value: new THREE.Color("#C9E8B0") },
+          uDpr: { value: Math.min(window.devicePixelRatio, 2) },
         },
       });
       const points = new THREE.Points(geo, mat);
@@ -187,6 +188,10 @@ export default function IntroExperience() {
       };
       tick();
       setReady(true);
+      } catch (err) {
+        console.error("Intro 3D hata:", err);
+        setFailed(true);
+      }
     })();
 
     return () => {
@@ -196,8 +201,8 @@ export default function IntroExperience() {
     };
   }, [reduce]);
 
-  // hareket azaltilmis: statik logo
-  if (reduce) {
+  // hareket azaltilmis veya hata: statik logo
+  if (reduce || failed) {
     return (
       <section className="relative flex h-[70vh] items-center justify-center bg-green">
         <img src="/logo.png" alt="DoğadanPack — Yeşil Bir Gelecek İçin" className="w-64 brightness-[3]" />
