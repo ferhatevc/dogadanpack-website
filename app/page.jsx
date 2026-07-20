@@ -2,10 +2,12 @@ import { Navbar, Hero, Products, Features, SocialProof, Pricing, Faq, Cta, Foote
 import ScrollJourney from "../components/ScrollJourney.jsx";
 import StudioGallery from "../components/StudioGallery.jsx";
 import Catalog from "../components/Catalog.jsx";
+import IntroExperience from "../components/IntroExperience.jsx";
 
 export default function Home() {
   return (
     <main>
+      <IntroExperience />
       <Navbar />
       <Hero />
       <ScrollJourney />
