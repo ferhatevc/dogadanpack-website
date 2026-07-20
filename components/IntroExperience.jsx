@@ -201,11 +201,18 @@ export default function IntroExperience() {
     };
   }, [reduce]);
 
-  // hareket azaltilmis veya hata: statik logo
+  // hareket azaltilmis veya hata: sik statik acilis (krem logo + slogan)
   if (reduce || failed) {
     return (
-      <section className="relative flex h-[70vh] items-center justify-center bg-green">
-        <img src="/logo.png" alt="DoğadanPack — Yeşil Bir Gelecek İçin" className="w-64 brightness-[3]" />
+      <section className="relative flex h-screen flex-col items-center justify-center gap-8 overflow-hidden" style={{ background: "#152A0D" }}>
+        <img
+          src="/logo.png"
+          alt="DoğadanPack — Yeşil Bir Gelecek İçin"
+          className="w-72 md:w-96"
+          style={{ filter: "brightness(0) invert(0.96) sepia(0.15)" }}
+        />
+        <p className="font-display text-xl italic text-[#DCE8CE] md:text-2xl">Bitkiden gelir, doğaya döner.</p>
+        <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#AEC49A]">Keşfetmek için kaydır ↓</span>
       </section>
     );
   }
